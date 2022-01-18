@@ -18,6 +18,7 @@ TeamCoach: Kristine Mangelschots
 Teamleden: Alex Coulon, Ajla Habota, Gregory Claes, Stef van Gool, Ruben Boone & Albert Baffour Awuah
 
 Teamleider: Alex Coulon
+
 Documentbeheerder: Albert Baffour Awuah
 
 
