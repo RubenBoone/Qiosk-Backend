@@ -2,6 +2,7 @@
 
 De backend van het Qiosk project voor Van Roey.
 
+
 TeamNr: D2
 
 TeamNaam: Qiosk
@@ -14,6 +15,8 @@ Teamleden: Alex Coulon, Ajla Habota, Gregory Claes, Stef van Gool, Ruben Boone &
 
 Teamleider: Alex Coulon
 Documentbeheerder: Albert Baffour Awuah
+
+
 
 
 Technische uitleg:
