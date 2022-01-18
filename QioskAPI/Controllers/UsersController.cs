@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QioskAPI.Data;
+using QioskAPI.Interfaces;
 using QioskAPI.Models;
 
 namespace QioskAPI.Controllers
@@ -14,32 +15,34 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly QioskContext _context;
+        
+        private  IUserService  _userService;
 
-        public UsersController(QioskContext context)
+        public UsersController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var response = await _userService.GetUsers();
+            if(response == null)
+                return BadRequest(new { message = "something went wrong in UserService" });
+
+            return Ok(response);
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
-            {
+            var response = await _userService.GetUser(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return user;
+            return Ok(response);
         }
 
         // PUT: api/Users/5
@@ -52,11 +55,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+               await _userService.PutUser(id, user);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +79,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
+            await _userService.PostUser(user);
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
@@ -88,21 +87,20 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user =await _userService.GetUser(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _userService.DeleteUser(id);
 
             return NoContent();
         }
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.UserID == id);
+            return _userService.UserExists(id);
         }
     }
 }

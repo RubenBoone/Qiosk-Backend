@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QioskAPI.Data;
+using QioskAPI.Interfaces;
 using QioskAPI.Models;
 
 namespace QioskAPI.Controllers
@@ -14,32 +15,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private ICompanyService _companyService;
 
-        public CompaniesController(QioskContext context)
+        public CompaniesController(ICompanyService companyService)
         {
-            _context = context;
+            _companyService = companyService;
         }
 
         // GET: api/Companies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
         {
-            return await _context.Companies.ToListAsync();
+            var response = await _companyService.GetCompanies();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in CompanyService" });
+
+            return Ok(response);
         }
 
         // GET: api/Companies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Company>> GetCompany(int id)
         {
-            var company = await _context.Companies.FindAsync(id);
-
-            if (company == null)
-            {
+            var response = await _companyService.GetCompany(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return company;
+            return Ok(response);
         }
 
         // PUT: api/Companies/5
@@ -52,11 +54,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(company).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _companyService.PutCompany(id, company);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +78,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Company>> PostCompany(Company company)
         {
-            _context.Companies.Add(company);
-            await _context.SaveChangesAsync();
-
+            await _companyService.PostCompany(company);
             return CreatedAtAction("GetCompany", new { id = company.CompanyID }, company);
         }
 
@@ -88,21 +86,20 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
-            var company = await _context.Companies.FindAsync(id);
+            var company = await _companyService.GetCompany(id);
             if (company == null)
             {
                 return NotFound();
             }
 
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
 
+            await _companyService.DeleteCompany(id);
             return NoContent();
         }
 
         private bool CompanyExists(int id)
         {
-            return _context.Companies.Any(e => e.CompanyID == id);
+            return _companyService.CompanyExists(id);
         }
     }
 }

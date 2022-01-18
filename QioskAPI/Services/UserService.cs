@@ -18,15 +18,15 @@ namespace QioskAPI.Services
     public class UserService : IUserService
     {
         private readonly AppSettings _appSettings;
-        private readonly QioskContext _quioskContext;
+        private readonly QioskContext _context;
         public UserService(IOptions<AppSettings> appSettings, QioskContext qioskContext)
         {
             _appSettings = appSettings.Value;
-            _quioskContext = qioskContext;
+            _context = qioskContext;
         }
         public User Authenticate(string email, string password)
         {
-            var user = _quioskContext.Users.SingleOrDefault(x => x.Email == email && x.Password == password);
+            var user = _context.Users.SingleOrDefault(x => x.Email == email && x.Password == password);
             // return null if user not found
             if (user == null)
                 return null;
@@ -51,6 +51,36 @@ namespace QioskAPI.Services
             // remove password before returning
             user.Password = null;
             return user;
+        }
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+        public async Task<User> GetUser(int id)
+        {
+            return await _context.Users.FindAsync(id);
+
+         
+        }
+        public async Task PutUser(int id, User user)
+        {
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+        public async Task PostUser(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteUser(int id)
+        {
+            var user =await _context.Users.FindAsync(id);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+        public bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.UserID == id);
         }
     }
 }
