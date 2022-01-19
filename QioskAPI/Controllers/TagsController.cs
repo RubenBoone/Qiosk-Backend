@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QioskAPI.Data;
 using QioskAPI.Models;
+using QioskAPI.Interfaces;
 
 namespace QioskAPI.Controllers
 {
@@ -14,32 +15,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private  ITagService _tagService;
 
-        public TagsController(QioskContext context)
+        public TagsController(ITagService tagService)
         {
-            _context = context;
+            _tagService = tagService;
         }
 
         // GET: api/Tags
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
         {
-            return await _context.Tags.ToListAsync();
+            var response = await _tagService.GetTags();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in TagService" });
+
+            return Ok(response);
         }
 
         // GET: api/Tags/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tag>> GetTag(int id)
         {
-            var tag = await _context.Tags.FindAsync(id);
-
-            if (tag == null)
-            {
+            var response = await _tagService.GetTag(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return tag;
+            return Ok(response);
         }
 
         // PUT: api/Tags/5
@@ -52,11 +54,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(tag).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _tagService.PutTag(id, tag);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +78,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Tag>> PostTag(Tag tag)
         {
-            _context.Tags.Add(tag);
-            await _context.SaveChangesAsync();
-
+            await _tagService.PostTag(tag);
             return CreatedAtAction("GetTag", new { id = tag.TagID }, tag);
         }
 
@@ -88,21 +86,21 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTag(int id)
         {
-            var tag = await _context.Tags.FindAsync(id);
+            var tag = await _tagService.GetTag(id);
             if (tag == null)
             {
                 return NotFound();
             }
 
-            _context.Tags.Remove(tag);
-            await _context.SaveChangesAsync();
 
+            await _tagService.DeleteTag(id);
             return NoContent();
         }
 
         private bool TagExists(int id)
         {
-            return _context.Tags.Any(e => e.TagID == id);
+            return _tagService.TagExists(id);
         }
     }
 }
+

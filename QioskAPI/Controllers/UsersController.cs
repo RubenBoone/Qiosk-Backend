@@ -23,6 +23,15 @@ namespace QioskAPI.Controllers
             _userService = userService;
         }
 
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate([FromBody] User userParam)
+        {
+            var user = _userService.Authenticate(userParam.Email, userParam.Password);
+            if (user == null)
+                return BadRequest(new { message = "Email or password is incorrect" });
+            return Ok(user);
+        }
+
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QioskAPI.Data;
 using QioskAPI.Models;
+using QioskAPI.Interfaces;
 
 namespace QioskAPI.Controllers
 {
@@ -14,32 +13,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class UserTagsController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private IUserTagService _userTagService;
 
-        public UserTagsController(QioskContext context)
+        public UserTagsController(IUserTagService userTagService)
         {
-            _context = context;
+            _userTagService = userTagService;
         }
 
         // GET: api/UserTags
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserTag>>> GetUserTags()
         {
-            return await _context.UserTags.ToListAsync();
+            var response = await _userTagService.GetUserTags();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in UserTagService" });
+
+            return Ok(response);
         }
 
         // GET: api/UserTags/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserTag>> GetUserTag(int id)
         {
-            var userTag = await _context.UserTags.FindAsync(id);
-
-            if (userTag == null)
-            {
+            var response = await _userTagService.GetUserTag(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return userTag;
+            return Ok(response);
         }
 
         // PUT: api/UserTags/5
@@ -52,11 +52,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(userTag).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _userTagService.PutUserTag(id, userTag);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +76,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<UserTag>> PostUserTag(UserTag userTag)
         {
-            _context.UserTags.Add(userTag);
-            await _context.SaveChangesAsync();
-
+            await _userTagService.PostUserTag(userTag);
             return CreatedAtAction("GetUserTag", new { id = userTag.UserTagID }, userTag);
         }
 
@@ -88,21 +84,20 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserTag(int id)
         {
-            var userTag = await _context.UserTags.FindAsync(id);
+            var userTag = await _userTagService.GetUserTag(id);
             if (userTag == null)
             {
                 return NotFound();
             }
 
-            _context.UserTags.Remove(userTag);
-            await _context.SaveChangesAsync();
 
+            await _userTagService.DeleteUserTag(id);
             return NoContent();
         }
 
         private bool UserTagExists(int id)
         {
-            return _context.UserTags.Any(e => e.UserTagID == id);
+            return _userTagService.UserTagExists(id);
         }
     }
 }

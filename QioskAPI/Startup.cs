@@ -86,8 +86,15 @@ namespace QioskAPI
                 };
             });
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IKioskService, KioskService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<ICreatePasswordService, CreatePasswordService>();
+            services.AddScoped<IUserBookingService, UserBookingService>();
+            services.AddScoped<IUserKioskService, UserKioskService>();
+            services.AddScoped<IUserTagService, UserTagService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

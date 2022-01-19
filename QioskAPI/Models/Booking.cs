@@ -7,7 +7,7 @@ namespace QioskAPI.Models
 {
     public class Booking
     {
-        public int bookingID { get; set; }
+        public int BookingID { get; set; }
         public DateTime ArrivalTime  { get; set; }
         public DateTime DepatureTime { get; set; }
     }

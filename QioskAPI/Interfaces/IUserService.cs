@@ -1,4 +1,5 @@
-﻿using QioskAPI.Models;
+﻿
+using QioskAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

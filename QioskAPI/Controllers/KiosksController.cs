@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QioskAPI.Data;
+using QioskAPI.Interfaces;
 using QioskAPI.Models;
 
 namespace QioskAPI.Controllers
@@ -14,32 +13,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class KiosksController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private IKioskService _kioskService;
 
-        public KiosksController(QioskContext context)
+        public KiosksController(IKioskService kioskService)
         {
-            _context = context;
+            _kioskService = kioskService;
         }
 
         // GET: api/Kiosks
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Kiosk>>> GetKiosks()
         {
-            return await _context.Kiosks.ToListAsync();
+            var response = await _kioskService.GetKiosks();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in KioskService" });
+
+            return Ok(response);
         }
 
         // GET: api/Kiosks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Kiosk>> GetKiosk(int id)
         {
-            var kiosk = await _context.Kiosks.FindAsync(id);
-
-            if (kiosk == null)
-            {
+            var response = await _kioskService.GetKiosk(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return kiosk;
+            return Ok(response);
         }
 
         // PUT: api/Kiosks/5
@@ -52,11 +52,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(kiosk).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _kioskService.PutKiosk(id, kiosk);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +76,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Kiosk>> PostKiosk(Kiosk kiosk)
         {
-            _context.Kiosks.Add(kiosk);
-            await _context.SaveChangesAsync();
-
+            await _kioskService.PostKiosk(kiosk);
             return CreatedAtAction("GetKiosk", new { id = kiosk.KioskID }, kiosk);
         }
 
@@ -88,21 +84,20 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteKiosk(int id)
         {
-            var kiosk = await _context.Kiosks.FindAsync(id);
+            var kiosk = await _kioskService.GetKiosk(id);
             if (kiosk == null)
             {
                 return NotFound();
             }
 
-            _context.Kiosks.Remove(kiosk);
-            await _context.SaveChangesAsync();
 
+            await _kioskService.DeleteKiosk(id);
             return NoContent();
         }
 
         private bool KioskExists(int id)
         {
-            return _context.Kiosks.Any(e => e.KioskID == id);
+            return _kioskService.KioskExists(id);
         }
     }
 }
