@@ -75,9 +75,9 @@ namespace QioskAPI
             context.Add(u3);
             //Add Bookings
 
-            context.Add(new Booking { ArrivalTime = DateTime.Now, DepatureTime = DateTime.Now.AddHours(2) });
+            context.Add(new Booking { ArrivalTime = DateTime.Now, DepatureTime = DateTime.Now.AddHours(2) , NumberOfVisitors= 1});
             context.SaveChanges();
-            context.Add(new Booking { ArrivalTime = DateTime.Now.AddHours(1), DepatureTime = DateTime.Now.AddHours(2) });
+            context.Add(new Booking { ArrivalTime = DateTime.Now.AddHours(1), DepatureTime = DateTime.Now.AddHours(2) , NumberOfVisitors=1});
             context.SaveChanges();
            
             //Add UserBookings
