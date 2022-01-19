@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QioskAPI.Data;
+using QioskAPI.Interfaces;
 using QioskAPI.Models;
 
 namespace QioskAPI.Controllers
@@ -14,32 +13,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class CreatePasswordsController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private ICreatePasswordService _createPasswordService;
 
-        public CreatePasswordsController(QioskContext context)
+        public CreatePasswordsController(ICreatePasswordService createPasswordService)
         {
-            _context = context;
+            _createPasswordService = createPasswordService;
         }
 
         // GET: api/CreatePasswords
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CreatePassword>>> GetCreatePasswords()
         {
-            return await _context.CreatePasswords.ToListAsync();
+            var response = await _createPasswordService.GetCreatePasswords();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in CreatePasswordService" });
+
+            return Ok(response);
         }
 
         // GET: api/CreatePasswords/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CreatePassword>> GetCreatePassword(int id)
         {
-            var createPassword = await _context.CreatePasswords.FindAsync(id);
-
-            if (createPassword == null)
-            {
+            var response = await _createPasswordService.GetCreatePassword(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return createPassword;
+            return Ok(response);
         }
 
         // PUT: api/CreatePasswords/5
@@ -52,11 +52,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(createPassword).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _createPasswordService.PutCreatePassword(id, createPassword);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +76,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<CreatePassword>> PostCreatePassword(CreatePassword createPassword)
         {
-            _context.CreatePasswords.Add(createPassword);
-            await _context.SaveChangesAsync();
-
+            await _createPasswordService.PostCreatePassword(createPassword);
             return CreatedAtAction("GetCreatePassword", new { id = createPassword.CreatePasswordID }, createPassword);
         }
 
@@ -88,21 +84,20 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCreatePassword(int id)
         {
-            var createPassword = await _context.CreatePasswords.FindAsync(id);
+            var createPassword = await _createPasswordService.GetCreatePassword(id);
             if (createPassword == null)
             {
                 return NotFound();
             }
 
-            _context.CreatePasswords.Remove(createPassword);
-            await _context.SaveChangesAsync();
 
+            await _createPasswordService.DeleteCreatePassword(id);
             return NoContent();
         }
 
         private bool CreatePasswordExists(int id)
         {
-            return _context.CreatePasswords.Any(e => e.CreatePasswordID == id);
+            return _createPasswordService.CreatePasswordExists(id);
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QioskAPI.Data;
 using QioskAPI.Models;
+using QioskAPI.Interfaces;
 
 namespace QioskAPI.Controllers
 {
@@ -14,32 +15,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private IBookingService _bookingService;
 
-        public BookingsController(QioskContext context)
+        public BookingsController(IBookingService bookingService)
         {
-            _context = context;
+            _bookingService = bookingService;
         }
 
         // GET: api/Bookings
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
-            return await _context.Bookings.ToListAsync();
+            var response = await _bookingService.GetBookings();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in BookingService" });
+
+            return Ok(response);
         }
 
         // GET: api/Bookings/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Booking>> GetBooking(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
-
-            if (booking == null)
-            {
+            var response = await _bookingService.GetBooking(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return booking;
+            return Ok(response);
         }
 
         // PUT: api/Bookings/5
@@ -47,16 +49,14 @@ namespace QioskAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBooking(int id, Booking booking)
         {
-            if (id != booking.bookingID)
+            if (id != booking.BookingID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(booking).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _bookingService.PutBooking(id, booking);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,31 +78,28 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBooking", new { id = booking.bookingID }, booking);
+            await _bookingService.PostBooking(booking);
+            return CreatedAtAction("GetBooking", new { id = booking.BookingID }, booking);
         }
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _bookingService.GetBooking(id);
             if (booking == null)
             {
                 return NotFound();
             }
 
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
 
+            await _bookingService.DeleteBooking(id);
             return NoContent();
         }
 
         private bool BookingExists(int id)
         {
-            return _context.Bookings.Any(e => e.bookingID == id);
+            return _bookingService.BookingExists(id);
         }
     }
 }

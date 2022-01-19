@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QioskAPI.Data;
 using QioskAPI.Models;
+using QioskAPI.Interfaces;
+
 
 namespace QioskAPI.Controllers
 {
@@ -14,32 +14,33 @@ namespace QioskAPI.Controllers
     [ApiController]
     public class UserKiosksController : ControllerBase
     {
-        private readonly QioskContext _context;
+        private IUserKioskService _userKioskService;
 
-        public UserKiosksController(QioskContext context)
+        public UserKiosksController(IUserKioskService userKioskService)
         {
-            _context = context;
+            _userKioskService = userKioskService;
         }
 
         // GET: api/UserKiosks
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserKiosk>>> GetUserKiosks()
         {
-            return await _context.UserKiosks.ToListAsync();
+            var response = await _userKioskService.GetUserKiosks();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in UserKioskService" });
+
+            return Ok(response);
         }
 
         // GET: api/UserKiosks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserKiosk>> GetUserKiosk(int id)
         {
-            var userKiosk = await _context.UserKiosks.FindAsync(id);
-
-            if (userKiosk == null)
-            {
+            var response = await _userKioskService.GetUserKiosk(id);
+            if (response == null)
                 return NotFound();
-            }
 
-            return userKiosk;
+            return Ok(response);
         }
 
         // PUT: api/UserKiosks/5
@@ -52,11 +53,9 @@ namespace QioskAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(userKiosk).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _userKioskService.PutUserKiosk(id, userKiosk);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,9 +77,7 @@ namespace QioskAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<UserKiosk>> PostUserKiosk(UserKiosk userKiosk)
         {
-            _context.UserKiosks.Add(userKiosk);
-            await _context.SaveChangesAsync();
-
+            await _userKioskService.PostUserKiosk(userKiosk);
             return CreatedAtAction("GetUserKiosk", new { id = userKiosk.UserKioskID }, userKiosk);
         }
 
@@ -88,21 +85,20 @@ namespace QioskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserKiosk(int id)
         {
-            var userKiosk = await _context.UserKiosks.FindAsync(id);
+            var userKiosk = await _userKioskService.GetUserKiosk(id);
             if (userKiosk == null)
             {
                 return NotFound();
             }
 
-            _context.UserKiosks.Remove(userKiosk);
-            await _context.SaveChangesAsync();
 
+            await _userKioskService.DeleteUserKiosk(id);
             return NoContent();
         }
 
         private bool UserKioskExists(int id)
         {
-            return _context.UserKiosks.Any(e => e.UserKioskID == id);
+            return _userKioskService.UserKioskExists(id);
         }
     }
 }
