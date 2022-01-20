@@ -122,13 +122,13 @@ namespace QioskAPI
             //Add USerKiosk
 
 
-            context.Add(new UserKiosk {UserID = 1 ,KioskID=1, Timer = 0});
+            context.Add(new UserKiosk {UserID = 1 ,KioskID=1, Begin = DateTime.Now, End = DateTime.Now.AddMinutes(20)});;
             context.SaveChanges();
-            context.Add(new UserKiosk { UserID = 2, KioskID =1, Timer = 0});
+            context.Add(new UserKiosk { UserID = 2, KioskID = 1, Begin = DateTime.Now, End = DateTime.Now.AddMinutes(20) });
             context.SaveChanges();
-            context.Add(new UserKiosk {UserID = 1, KioskID = 2, Timer = 0 });
+            context.Add(new UserKiosk {UserID = 1, KioskID = 2, Begin = DateTime.Now.AddMinutes(30), End = DateTime.Now.AddMinutes(40) });
             context.SaveChanges();
-            context.Add(new UserKiosk { UserID = 2, KioskID = 2, Timer = 0 });
+            context.Add(new UserKiosk { UserID = 2, KioskID = 2, Begin = DateTime.Now.AddMinutes(40), End = DateTime.Now.AddMinutes(45) });
             context.SaveChanges();
 
            
