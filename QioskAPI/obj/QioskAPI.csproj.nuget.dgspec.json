@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ruben\\Documents\\School\\3deJaar\\Project4\\Qiosk-Backend\\QioskAPI\\QioskAPI.csproj": {}
+    "D:\\SCHOOL 2021-22\\Project 4.0\\QioskAPI\\QioskAPI\\QioskAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ruben\\Documents\\School\\3deJaar\\Project4\\Qiosk-Backend\\QioskAPI\\QioskAPI.csproj": {
+    "D:\\SCHOOL 2021-22\\Project 4.0\\QioskAPI\\QioskAPI\\QioskAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ruben\\Documents\\School\\3deJaar\\Project4\\Qiosk-Backend\\QioskAPI\\QioskAPI.csproj",
+        "projectUniqueName": "D:\\SCHOOL 2021-22\\Project 4.0\\QioskAPI\\QioskAPI\\QioskAPI.csproj",
         "projectName": "QioskAPI",
-        "projectPath": "C:\\Users\\ruben\\Documents\\School\\3deJaar\\Project4\\Qiosk-Backend\\QioskAPI\\QioskAPI.csproj",
-        "packagesPath": "C:\\Users\\ruben\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ruben\\Documents\\School\\3deJaar\\Project4\\Qiosk-Backend\\QioskAPI\\obj\\",
+        "projectPath": "D:\\SCHOOL 2021-22\\Project 4.0\\QioskAPI\\QioskAPI\\QioskAPI.csproj",
+        "packagesPath": "C:\\Users\\NVM\\.nuget\\packages\\",
+        "outputPath": "D:\\SCHOOL 2021-22\\Project 4.0\\QioskAPI\\QioskAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ruben\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NVM\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -99,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
