@@ -54,11 +54,11 @@ namespace QioskAPI.Services
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u=>u.Company).ToListAsync();
         }
         public async Task<User> GetUser(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.Include(u=>u.Company).FirstOrDefaultAsync(u=>u.UserID == id);
 
          
         }
