@@ -69,6 +69,12 @@ namespace QioskAPI.Services
         }
         public async Task PostUser(User user)
         {
+            var company = await _context.Companies.FirstOrDefaultAsync(u => user.Company.Name == u.Name);
+            if (company != null)
+            {
+                user.CompanyID = company.CompanyID;
+                user.Company = company;
+            }
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
