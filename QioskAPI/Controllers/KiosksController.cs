@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QioskAPI.Interfaces;
@@ -44,6 +45,7 @@ namespace QioskAPI.Controllers
 
         // PUT: api/Kiosks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]//ad
         [HttpPut("{id}")]
         public async Task<IActionResult> PutKiosk(int id, Kiosk kiosk)
         {
@@ -73,14 +75,26 @@ namespace QioskAPI.Controllers
 
         // POST: api/Kiosks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]//ad
         [HttpPost]
         public async Task<ActionResult<Kiosk>> PostKiosk(Kiosk kiosk)
         {
-            await _kioskService.PostKiosk(kiosk);
-            return CreatedAtAction("GetKiosk", new { id = kiosk.KioskID }, kiosk);
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+
+                await _kioskService.PostKiosk(kiosk);
+                return CreatedAtAction("GetKiosk", new { id = kiosk.KioskID }, kiosk);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+           
         }
 
         // DELETE: api/Kiosks/5
+        [Authorize]//ad
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteKiosk(int id)
         {
@@ -89,9 +103,17 @@ namespace QioskAPI.Controllers
             {
                 return NotFound();
             }
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
 
+                await _kioskService.DeleteKiosk(id);
+            }
+            else
+            {
+                return Unauthorized();
+            }
 
-            await _kioskService.DeleteKiosk(id);
             return NoContent();
         }
 

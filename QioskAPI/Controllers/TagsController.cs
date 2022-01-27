@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using QioskAPI.Data;
 using QioskAPI.Models;
 using QioskAPI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QioskAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TagsController : ControllerBase
@@ -26,7 +28,17 @@ namespace QioskAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
         {
-            var response = await _tagService.GetTags();
+            IEnumerable<Tag> response;
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+
+                response= await _tagService.GetTags();
+            }
+            else
+            {
+                return Unauthorized();
+            }
             if (response == null)
                 return BadRequest(new { message = "something went wrong in TagService" });
 
@@ -92,7 +104,16 @@ namespace QioskAPI.Controllers
                 return NotFound();
             }
 
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
 
+                await _tagService.DeleteTag(id);
+            }
+            else
+            {
+                return Unauthorized();
+            }
             await _tagService.DeleteTag(id);
             return NoContent();
         }

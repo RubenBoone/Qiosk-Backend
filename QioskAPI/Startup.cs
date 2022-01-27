@@ -91,7 +91,6 @@ namespace QioskAPI
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IKioskService, KioskService>();
             services.AddScoped<IBookingService, BookingService>();
-            services.AddScoped<ICreatePasswordService, CreatePasswordService>();
             services.AddScoped<IUserBookingService, UserBookingService>();
             services.AddScoped<IUserKioskService, UserKioskService>();
             services.AddScoped<IUserTagService, UserTagService>();

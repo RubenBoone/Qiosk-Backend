@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QioskAPI.Models;
 using QioskAPI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QioskAPI.Controllers
 {
@@ -44,6 +45,7 @@ namespace QioskAPI.Controllers
 
         // PUT: api/UserTags/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserTag(int id, UserTag userTag)
         {
@@ -81,6 +83,7 @@ namespace QioskAPI.Controllers
         }
 
         // DELETE: api/UserTags/5
+        [Authorize]//ad
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserTag(int id)
         {
@@ -89,9 +92,17 @@ namespace QioskAPI.Controllers
             {
                 return NotFound();
             }
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
 
+                await _userTagService.DeleteUserTag(id);
+            }
+            else
+            {
+                return Unauthorized();
+            }
 
-            await _userTagService.DeleteUserTag(id);
             return NoContent();
         }
 
