@@ -21,7 +21,6 @@ namespace QioskAPI.Data
         public DbSet<UserBooking> UserBookings { get; set; }
         public DbSet<Kiosk> Kiosks { get; set; }
         public DbSet<UserKiosk> UserKiosks { get; set; }
-        public DbSet<CreatePassword> CreatePasswords { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
 
 
@@ -34,7 +33,6 @@ namespace QioskAPI.Data
             modelBuilder.Entity<UserBooking>().ToTable("UserBooking");
             modelBuilder.Entity<Kiosk>().ToTable("Kiosk");
             modelBuilder.Entity<UserKiosk>().ToTable("UserKiosk");
-            modelBuilder.Entity<CreatePassword>().ToTable("CreatePassword");
             modelBuilder.Entity<UserTag>().ToTable("UserTag");
         }
     }

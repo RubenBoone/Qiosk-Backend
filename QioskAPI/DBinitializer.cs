@@ -102,14 +102,7 @@ namespace QioskAPI
             context.Add(new UserTag { UserID = 2, TagID= 2 });
             context.SaveChanges();
             
-            //Add CreatePAssword
-
-
-            context.Add(new CreatePassword {UserID = 1 ,Link="", IsUsed = true});
-            context.SaveChanges();
-            context.Add(new CreatePassword { UserID = 2, Link= "", IsUsed =true});
-            context.SaveChanges();
-              
+           
             
             //Add Kiosks
 

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QioskAPI.Data;
 using QioskAPI.Models;
 using QioskAPI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QioskAPI.Controllers
 {
@@ -23,10 +24,20 @@ namespace QioskAPI.Controllers
         }
 
         // GET: api/Bookings
+        [Authorize]//ad
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
-            var response = await _bookingService.GetBookings();
+            IEnumerable<Booking> response;
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+                response = await _bookingService.GetBookings();
+            }
+            else
+            {
+                return Unauthorized();
+            }
             if (response == null)
                 return BadRequest(new { message = "something went wrong in BookingService" });
 
@@ -46,6 +57,7 @@ namespace QioskAPI.Controllers
 
         // PUT: api/Bookings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]//ad
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBooking(int id, Booking booking)
         {
@@ -56,7 +68,16 @@ namespace QioskAPI.Controllers
 
             try
             {
-                await _bookingService.PutBooking(id, booking);
+                var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+                if (isAdmin)
+                {
+
+                    await _bookingService.PutBooking(id,booking);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,6 +104,7 @@ namespace QioskAPI.Controllers
         }
 
         // DELETE: api/Bookings/5
+        [Authorize]//ad
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
@@ -91,10 +113,17 @@ namespace QioskAPI.Controllers
             {
                 return NotFound();
             }
-
-
-            await _bookingService.DeleteBooking(id);
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+                await _bookingService.DeleteBooking(id);
+            }
+            else
+            {
+                return Unauthorized();
+            }
             return NoContent();
+
         }
 
         private bool BookingExists(int id)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace QioskAPI.Controllers
         }
 
         // GET: api/Companies
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
         {
@@ -34,6 +36,7 @@ namespace QioskAPI.Controllers
         }
 
         // GET: api/Companies/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Company>> GetCompany(int id)
         {
@@ -46,6 +49,7 @@ namespace QioskAPI.Controllers
 
         // PUT: api/Companies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]//ad
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany(int id, Company company)
         {
@@ -56,7 +60,16 @@ namespace QioskAPI.Controllers
 
             try
             {
-                await _companyService.PutCompany(id, company);
+                var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+                if (isAdmin)
+                {
+
+                    await _companyService.PutCompany(id,company);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,6 +96,7 @@ namespace QioskAPI.Controllers
         }
 
         // DELETE: api/Companies/5
+        [Authorize]//ad
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
@@ -91,9 +105,15 @@ namespace QioskAPI.Controllers
             {
                 return NotFound();
             }
-
-
-            await _companyService.DeleteCompany(id);
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+                await _companyService.DeleteCompany(id);
+            }
+            else
+            {
+                return Unauthorized();
+            }
             return NoContent();
         }
 
