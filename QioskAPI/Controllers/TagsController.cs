@@ -114,7 +114,6 @@ namespace QioskAPI.Controllers
             {
                 return Unauthorized();
             }
-            await _tagService.DeleteTag(id);
             return NoContent();
         }
 
