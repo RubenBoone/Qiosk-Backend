@@ -73,11 +73,12 @@ namespace QioskAPI
             context.Add(u1);
             context.Add(u2);
             context.Add(u3);
+            context.SaveChanges();
             //Add Bookings
 
-            context.Add(new Booking {  BookingTime = DateTime.Now.AddHours(2) });
+            context.Add(new Booking {  BookingTime = DateTime.Now.AddHours(2) , companyID=1});
             context.SaveChanges();
-            context.Add(new Booking { BookingTime = DateTime.Now.AddHours(1) });
+            context.Add(new Booking { BookingTime = DateTime.Now.AddHours(1), companyID=2});
             context.SaveChanges();
            
             //Add UserBookings
