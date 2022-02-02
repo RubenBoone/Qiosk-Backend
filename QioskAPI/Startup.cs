@@ -45,7 +45,7 @@ namespace QioskAPI
             services.AddDbContext<QioskContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
-           /* services.AddSwaggerGen(c =>
+       /*     services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
