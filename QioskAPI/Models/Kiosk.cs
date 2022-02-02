@@ -10,6 +10,6 @@ namespace QioskAPI.Models
         public int KioskID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public double Coordinate { get; set; }
+        public string Coordinate { get; set; }
     }
 }
