@@ -10,6 +10,7 @@ namespace QioskAPI.Interfaces
     {
         Task<IEnumerable<UserKiosk>> GetUserKiosks();
         Task<UserKiosk> GetUserKiosk(int id);
+        Task<IEnumerable<UserKiosk>> GetSpecificUserKiosks(int userId);
         Task PutUserKiosk(int id, UserKiosk UserKiosk);
         Task PostUserKiosk(UserKiosk UserKiosk);
         Task DeleteUserKiosk(int id);
