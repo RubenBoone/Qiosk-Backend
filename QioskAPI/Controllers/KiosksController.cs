@@ -31,6 +31,16 @@ namespace QioskAPI.Controllers
 
             return Ok(response);
         }
+        // GET: api/Kiosks
+        [HttpGet("kiosksDash")]
+        public async Task<ActionResult<IEnumerable<Kiosk>>> GetKiosksDash()
+        {
+            var response = await _kioskService.GetKiosksDash();
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in KioskService" });
+
+            return Ok(response);
+        }
 
         // GET: api/Kiosks/5
         [HttpGet("{id}")]

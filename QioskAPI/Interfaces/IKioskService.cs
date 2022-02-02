@@ -9,6 +9,7 @@ namespace QioskAPI.Interfaces
     public interface IKioskService
     {
         Task<IEnumerable<Kiosk>> GetKiosks();
+        Task<IEnumerable<Kiosk>> GetKiosksDash();
         Task<Kiosk> GetKiosk(int id);
         Task PutKiosk(int id, Kiosk Kiosk);
         Task PostKiosk(Kiosk Kiosk);

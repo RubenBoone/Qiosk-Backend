@@ -41,7 +41,7 @@ namespace QioskAPI
                 FirstName = "User",
                 LastName = "One",
                 Email = "user1@qiosk.be",
-                Password = "G46758/*+DROWSSAPfd656.he6/.",
+                Password = "apfd656.he6/.g46758/*+drow==",
                 IsActive = true,
                 IsAdmin = false,
                 CompanyID = 1
@@ -52,7 +52,7 @@ namespace QioskAPI
                 FirstName = "User",
                 LastName = "Two",
                 Email = "user2@qiosk.be",
-                Password = "G46758/*+DROWSSAPfd656.he6/.",
+                Password = "apfd656.he6/.g46758/*+drow==",
                 IsActive = true,
                 IsAdmin = true,
                 CompanyID= 2
@@ -64,7 +64,7 @@ namespace QioskAPI
                 FirstName = "Admin",
                 LastName = "User",
                 Email = "QioskD2@gmail.com",
-                Password = "G46758/*+DROWSSAPfd656.he6/.",
+                Password = "apfd656.he6/.g46758/*+drow==",
                 IsActive = true,
                 IsAdmin = true,
                 CompanyID = 3,

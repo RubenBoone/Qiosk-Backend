@@ -43,6 +43,26 @@ namespace QioskAPI.Controllers
 
             return Ok(response);
         }
+        // GET: api/Bookings
+        [Authorize]//ad
+        [HttpGet("bookingsDash")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetBookingsDash()
+        {
+            IEnumerable<Booking> response;
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+                response = await _bookingService.GetBookings();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in BookingService" });
+
+            return Ok(response);
+        }
 
         // GET: api/Bookings/5
         [HttpGet("{id}")]
