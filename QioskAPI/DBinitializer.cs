@@ -108,9 +108,9 @@ namespace QioskAPI
             //Add Kiosks
 
 
-            context.Add(new Kiosk {Name = "Workstation" , Description= "WorkStation setup", Coordinate = 0.0});
+            context.Add(new Kiosk {Name = "Workstation" , Description= "WorkStation setup", Coordinate = "2,1,1"});
             context.SaveChanges();
-            context.Add(new Kiosk { Name ="Tracking system",Description= "Tracking van mensens bij een beurs", Coordinate=0.0});
+            context.Add(new Kiosk { Name ="Tracking system",Description= "Tracking van mensens bij een beurs", Coordinate="8,1,2"});
             context.SaveChanges();
             
             //Add USerKiosk
