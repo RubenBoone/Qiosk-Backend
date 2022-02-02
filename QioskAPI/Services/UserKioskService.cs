@@ -38,6 +38,11 @@ namespace QioskAPI.Services
             return await _context.UserKiosks.FindAsync(id);
         }
 
+        public async Task<IEnumerable<UserKiosk>> GetSpecificUserKiosks(int userId)
+        {
+            return await _context.UserKiosks.Where(u => u.UserID == userId).ToListAsync();
+        }
+
         public async Task PostUserKiosk(UserKiosk userKiosk)
         {
             _context.UserKiosks.Add(userKiosk);

@@ -43,6 +43,16 @@ namespace QioskAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet("specific/{userID}")]
+        public async Task<ActionResult<IEnumerable<UserKiosk>>> GetSpecificUserKiosks(int userID)
+        {
+            var response = await _userKioskService.GetSpecificUserKiosks(userID);
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in UserKioskService" });
+
+            return Ok(response);
+        }
+
         // PUT: api/UserKiosks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
