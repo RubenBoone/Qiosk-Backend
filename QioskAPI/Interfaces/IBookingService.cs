@@ -11,6 +11,7 @@ namespace QioskAPI.Interfaces
         Task<IEnumerable<Booking>> GetBookings();
         Task<Booking> GetBooking(int id);
         Task PutBooking(int id, Booking Booking);
+        Task<IEnumerable<Booking>> GetUsersByBookingId(int id);
         Task PostBooking(Booking Booking);
         Task DeleteBooking(int id);
         bool BookingExists(int id);

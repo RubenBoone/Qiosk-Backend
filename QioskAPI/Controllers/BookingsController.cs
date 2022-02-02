@@ -55,6 +55,25 @@ namespace QioskAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet("users/{id}")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetUsersByBookingId(int id)
+        {
+            IEnumerable<Booking> response;
+            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            if (isAdmin)
+            {
+                response = await _bookingService.GetUsersByBookingId(id);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in BookingService" });
+
+            return Ok(response);
+        }
+
         // PUT: api/Bookings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]//ad

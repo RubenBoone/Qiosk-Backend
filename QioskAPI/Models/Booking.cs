@@ -9,5 +9,6 @@ namespace QioskAPI.Models
     {
         public int BookingID { get; set; }
         public DateTime BookingTime  { get; set; }
+        public IEnumerable<UserBooking> UserBookings { get; set; }
     }
 }
