@@ -41,7 +41,7 @@ namespace QioskAPI
                 FirstName = "User",
                 LastName = "One",
                 Email = "user1@qiosk.be",
-                Password = "G46758/*+DROWSSAPfd656.he6/.",
+                Password = "apfd656.he6/.g46758/*+drow==",
                 IsActive = true,
                 IsAdmin = false,
                 CompanyID = 1
@@ -52,7 +52,7 @@ namespace QioskAPI
                 FirstName = "User",
                 LastName = "Two",
                 Email = "user2@qiosk.be",
-                Password = "G46758/*+DROWSSAPfd656.he6/.",
+                Password = "apfd656.he6/.g46758/*+drow==",
                 IsActive = true,
                 IsAdmin = true,
                 CompanyID= 2
@@ -64,7 +64,7 @@ namespace QioskAPI
                 FirstName = "Admin",
                 LastName = "User",
                 Email = "QioskD2@gmail.com",
-                Password = "G46758/*+DROWSSAPfd656.he6/.",
+                Password = "apfd656.he6/.g46758/*+drow==",
                 IsActive = true,
                 IsAdmin = true,
                 CompanyID = 3,
@@ -73,11 +73,12 @@ namespace QioskAPI
             context.Add(u1);
             context.Add(u2);
             context.Add(u3);
+            context.SaveChanges();
             //Add Bookings
 
-            context.Add(new Booking {  BookingTime = DateTime.Now.AddHours(2) });
+            context.Add(new Booking {  BookingTime = DateTime.Now.AddHours(2) , companyID=1});
             context.SaveChanges();
-            context.Add(new Booking { BookingTime = DateTime.Now.AddHours(1) });
+            context.Add(new Booking { BookingTime = DateTime.Now.AddHours(1), companyID=2});
             context.SaveChanges();
            
             //Add UserBookings

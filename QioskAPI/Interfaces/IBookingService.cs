@@ -9,6 +9,7 @@ namespace QioskAPI.Interfaces
     public interface IBookingService
     {
         Task<IEnumerable<Booking>> GetBookings();
+        Task<IEnumerable<Booking>> GetBookingsDash();
         Task<Booking> GetBooking(int id);
         Task PutBooking(int id, Booking Booking);
         Task<IEnumerable<Booking>> GetUsersByBookingId(int id);
