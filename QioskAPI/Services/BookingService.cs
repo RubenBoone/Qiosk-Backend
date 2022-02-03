@@ -39,7 +39,7 @@ namespace QioskAPI.Services
 
         public async Task<IEnumerable<Booking>> GetUsersByBookingId(int id)
         {
-            return await _context.Bookings.Where(b => b.BookingID == id).Include(ub => ub.userBookings).ToListAsync();
+            return await _context.Bookings.Where(b => b.BookingID == id).Include(ub => ub.userBookings).ThenInclude(u => u.User).ToListAsync();
         }
 
         public async Task<Booking> GetBooking(int id)

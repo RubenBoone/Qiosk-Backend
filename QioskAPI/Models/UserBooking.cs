@@ -10,5 +10,6 @@ namespace QioskAPI.Models
         public int UserBookingID { get; set; }
         public int UserID { get; set; }
         public int BookingID { get; set; }
+        public User User { get; set; }
     }
 }
