@@ -13,5 +13,7 @@ namespace QioskAPI.Models
         public int KioskID { get; set; }
         public DateTime Begin { get; set; }
         public DateTime End { get; set; }
+        public User User { get; set; }
+        public Kiosk Kiosk { get; set; }
     }
 }

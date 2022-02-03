@@ -9,5 +9,6 @@ namespace QioskAPI.Models
     {
         public int TagID { get; set; }
         public string Code { get; set; }
+        public List<UserTag> UserTags { get; set; }
     }
 }
