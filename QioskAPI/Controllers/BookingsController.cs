@@ -24,20 +24,20 @@ namespace QioskAPI.Controllers
         }
 
         // GET: api/Bookings
-        [Authorize]//ad
+        //[Authorize]//ad
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
             IEnumerable<Booking> response;
-            var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
-            if (isAdmin)
-            {
+           // var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
+            //if (isAdmin)
+            //{
                 response = await _bookingService.GetBookings();
-            }
-            else
-            {
-                return Unauthorized();
-            }
+           // }
+            //else
+            //{
+              //  return Unauthorized();
+            //}
             if (response == null)
                 return BadRequest(new { message = "something went wrong in BookingService" });
 
@@ -52,7 +52,7 @@ namespace QioskAPI.Controllers
             var isAdmin = bool.Parse(User.Claims.FirstOrDefault(c => c.Type == "isAdmin").Value);
             if (isAdmin)
             {
-                response = await _bookingService.GetBookings();
+                response = await _bookingService.GetBookingsDash();
             }
             else
             {

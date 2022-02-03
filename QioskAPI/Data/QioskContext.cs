@@ -16,8 +16,8 @@ namespace QioskAPI.Data
         }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<UserBooking> UserBookings { get; set; }
         public DbSet<Kiosk> Kiosks { get; set; }
         public DbSet<UserKiosk> UserKiosks { get; set; }
@@ -28,9 +28,9 @@ namespace QioskAPI.Data
         {
             modelBuilder.Entity<Tag>().ToTable("Tag");
             modelBuilder.Entity<Company>().ToTable("Company");
-            modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Booking>().ToTable("Booking");
-            modelBuilder.Entity<UserBooking>().ToTable("UserBooking");
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<UserBooking>().HasOne(e => e.User).WithMany().OnDelete(DeleteBehavior.Restrict); 
             modelBuilder.Entity<Kiosk>().ToTable("Kiosk");
             modelBuilder.Entity<UserKiosk>().ToTable("UserKiosk");
             modelBuilder.Entity<UserTag>().ToTable("UserTag");

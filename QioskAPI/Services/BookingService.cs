@@ -30,21 +30,21 @@ namespace QioskAPI.Services
 
         public async Task<IEnumerable<Booking>> GetBookings()
         {
-            return await _context.Bookings.Include(b=>b.company).Include(b=>b.userBookings).ToListAsync();
+            return await _context.Bookings.Include(c=>c.Company).Include(u=>u.UserBookings).ToListAsync();
         }
         public async Task<IEnumerable<Booking>> GetBookingsDash()
         {
-            return await _context.Bookings.OrderByDescending(b=>b.BookingTime).Include(b=>b.company).Include(b=>b.userBookings).Take(10).ToListAsync();
+            return await _context.Bookings.OrderByDescending(b=>b.BookingTime).Include(b=>b.Company).Include(b=>b.UserBookings).Take(10).ToListAsync();
         }
 
         public async Task<IEnumerable<Booking>> GetUsersByBookingId(int id)
         {
-            return await _context.Bookings.Where(b => b.BookingID == id).Include(ub => ub.userBookings).ThenInclude(u => u.User).ToListAsync();
+            return await _context.Bookings.Where(b => b.BookingID == id).Include(ub => ub.UserBookings).ThenInclude(u => u.User).ToListAsync();
         }
 
         public async Task<Booking> GetBooking(int id)
         {
-            return await _context.Bookings.Include(b=>b.company).FirstOrDefaultAsync(b=>b.BookingID == id);
+            return await _context.Bookings.Include(b=>b.Company).FirstOrDefaultAsync(b=>b.BookingID == id);
         }
 
         public async Task PostBooking(Booking booking)

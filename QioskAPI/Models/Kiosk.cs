@@ -11,6 +11,6 @@ namespace QioskAPI.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string Coordinate { get; set; }
-        public List<UserKiosk> UserKiosks { get; set; }
+        public ICollection<UserKiosk> UserKiosks { get; set; }
     }
 }

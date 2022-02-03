@@ -76,11 +76,11 @@ namespace QioskAPI
             context.SaveChanges();
             //Add Bookings
 
-            context.Add(new Booking {  BookingTime = DateTime.Now.AddHours(2) , companyID=1});
+            context.Add(new Booking {  BookingTime = DateTime.Now.AddHours(2) , CompanyID=1});
             context.SaveChanges();
-            context.Add(new Booking { BookingTime = DateTime.Now.AddHours(1), companyID=2});
+            context.Add(new Booking { BookingTime = DateTime.Now.AddHours(1), CompanyID=2});
             context.SaveChanges();
-           
+
             //Add UserBookings
 
             context.Add(new UserBooking { UserID =1 , BookingID =1 });
@@ -108,9 +108,13 @@ namespace QioskAPI
             //Add Kiosks
 
 
-            context.Add(new Kiosk {Name = "Workstation" , Description= "WorkStation setup", Coordinate = "2,1,1"});
+            context.Add(new Kiosk {Name = "Workstation" , Description= "WorkStation setup", Coordinate = "1,2,1"});
             context.SaveChanges();
-            context.Add(new Kiosk { Name ="Tracking system",Description= "Tracking van mensens bij een beurs", Coordinate="8,1,2"});
+            context.Add(new Kiosk { Name ="Tracking system",Description= "Tracking van mensens bij een beurs", Coordinate="7,1,1"});
+            context.SaveChanges();  
+            context.Add(new Kiosk { Name = "Smart", Description= "smart connecte devices", Coordinate="7,5,2"});
+            context.SaveChanges();  
+            context.Add(new Kiosk { Name ="Tracking system",Description= "Different devices for communication", Coordinate="1,5,1"});
             context.SaveChanges();
             
             //Add USerKiosk
