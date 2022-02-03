@@ -10,5 +10,7 @@ namespace QioskAPI.Models
         public int UserTagID { get; set; }
         public int UserID { get; set; }
         public int TagID { get; set; }
+        public User User { get; set; }
+        public Tag Tag { get; set; }
     }
 }
