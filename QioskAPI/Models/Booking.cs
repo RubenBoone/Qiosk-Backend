@@ -10,13 +10,13 @@ namespace QioskAPI.Models
     {
         public int BookingID { get; set; }
         public DateTime BookingTime  { get; set; }
-        public int companyID { get; set; }
-        public Company company { get; set; }
-        public List<UserBooking> userBookings { get; set; }
+        public int CompanyID { get; set; }
+        public Company Company { get; set; }
+        public ICollection<UserBooking> UserBookings { get; set; }
         [NotMapped]
         public int numberOfVisitors { 
             get { 
-                return userBookings!=null?userBookings.Count():0; 
+                return UserBookings!=null?UserBookings.Count():0; 
             }
         }
     }
