@@ -29,11 +29,13 @@ namespace QioskAPI.Data
             modelBuilder.Entity<Tag>().ToTable("Tag");
             modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Booking>().ToTable("Booking");
-            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<User>().HasOne(u=>u.Company);
             modelBuilder.Entity<UserBooking>().HasOne(e => e.User).WithMany().OnDelete(DeleteBehavior.Restrict); 
             modelBuilder.Entity<Kiosk>().ToTable("Kiosk");
             modelBuilder.Entity<UserKiosk>().ToTable("UserKiosk");
             modelBuilder.Entity<UserTag>().ToTable("UserTag");
+   
         }
+   
     }
 }

@@ -111,6 +111,11 @@ namespace QioskAPI.Controllers
         public async Task<ActionResult<User>> PostUser(User user)
         {
             await _userService.PostUser(user);
+            bool UE =await _userService.UserExistsByMailAsync(user.Email);
+            if (UE)
+            {
+                return Ok(await _userService.GetUserByEmail(user.Email));
+            }
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
@@ -140,7 +145,7 @@ namespace QioskAPI.Controllers
 
         private bool UserExists(int id)
         {
-            return _userService.UserExists(id);
+            return _userService.UserExistsAsync(id);
         }
     }
 }

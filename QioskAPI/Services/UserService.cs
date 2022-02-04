@@ -62,6 +62,12 @@ namespace QioskAPI.Services
 
          
         }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.Include(u=>u.Company).FirstOrDefaultAsync(u=>u.Email.ToLower() == email);
+
+         
+        }
         public async Task PutUser(int id, User user)
         {
             _context.Entry(user).State = EntityState.Modified;
@@ -69,14 +75,26 @@ namespace QioskAPI.Services
         }
         public async Task PostUser(User user)
         {
-            var company = await _context.Companies.FirstOrDefaultAsync(u => user.Company.Name == u.Name);
-            if (company != null)
+            
+            var UE =await UserExistsByMailEnUpdateAsync(user);
+            if (!UE)
             {
-                user.CompanyID = company.CompanyID;
-                user.Company = company;
+                user.CompanyID = user.CompanyID == 0 ? user.Company.CompanyID : user.CompanyID;
+                var c = await _context.Companies.FindAsync(user.CompanyID);
+                if (c != null)
+                { user.Company = c; }
+                if (user.CompanyID == 0)
+                {
+                    var company = await _context.Companies.FirstOrDefaultAsync(u => user.Company.Name == u.Name);
+                    if (company != null)
+                    {
+                        user.CompanyID = company.CompanyID;
+                        user.Company = company;
+                    }
+                }
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
             }
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
         }
         public async Task DeleteUser(int id)
         {
@@ -84,9 +102,34 @@ namespace QioskAPI.Services
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
-        public bool UserExists(int id)
+        public bool UserExistsAsync(int id)
         {
             return _context.Users.Any(e => e.UserID == id);
         }
+        public async Task<bool> UserExistsByMailEnUpdateAsync(User user)
+        {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == user.Email.ToLower());
+            if (existingUser != null)
+            {
+                existingUser.CompanyID = user.CompanyID;
+                existingUser.Company = user.Company;
+                existingUser.Password = user.Password;
+                existingUser.IsActive = true;
+                _context.Entry(existingUser).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        } 
+        public async Task<bool> UserExistsByMailAsync(string email)
+        {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            if (existingUser != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

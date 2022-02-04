@@ -34,7 +34,7 @@ namespace QioskAPI.Services
         }
         public async Task<IEnumerable<Kiosk>> GetKiosksDash()
         {
-            return await _context.Kiosks.OrderByDescending(k=>k.KioskID).Take(10).ToListAsync();
+            return await _context.Kiosks.OrderByDescending(k=>k.KioskID).Take(4).ToListAsync();
         }
 
         public async Task<Kiosk> GetKiosk(int id)

@@ -45,7 +45,7 @@ namespace QioskAPI
             services.AddDbContext<QioskContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
-           /* services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -62,7 +62,7 @@ namespace QioskAPI
                     {new OpenApiSecurityScheme {Reference = new OpenApiReference {Type =
                     ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] {}}
                 });
-            });*/
+            });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             // configure jwt authentication
