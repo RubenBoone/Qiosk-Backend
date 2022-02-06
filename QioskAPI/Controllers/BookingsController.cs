@@ -93,6 +93,18 @@ namespace QioskAPI.Controllers
 
             return Ok(response);
         }
+        //slots
+        [HttpGet("slots/{d}")]
+        public async Task<ActionResult<IEnumerable<int>>> GetAvailableBookingSlots(string d)
+        {
+            
+            var response = await _bookingService.GetTimeSlots(d);
+          
+            if (response == null)
+                return BadRequest(new { message = "something went wrong in BookingService" });
+
+            return Ok(response);
+        }
 
         // PUT: api/Bookings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

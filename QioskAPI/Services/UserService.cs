@@ -85,7 +85,7 @@ namespace QioskAPI.Services
                 { user.Company = c; }
                 if (user.CompanyID == 0)
                 {
-                    var company = await _context.Companies.FirstOrDefaultAsync(u => user.Company.Name == u.Name);
+                    var company = await _context.Companies.FirstOrDefaultAsync(u => user.Company.Name.Trim().ToLower() == u.Name.Trim().ToLower());
                     if (company != null)
                     {
                         user.CompanyID = company.CompanyID;

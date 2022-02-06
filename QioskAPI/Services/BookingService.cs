@@ -34,7 +34,7 @@ namespace QioskAPI.Services
         }
         public async Task<IEnumerable<Booking>> GetBookingsDash()
         {
-            return await _context.Bookings.OrderByDescending(b=>b.BookingTime).Include(b=>b.Company).Include(b=>b.UserBookings).Take(4).ToListAsync();
+            return await _context.Bookings.Where(b=>b.BookingTime.Date>=DateTime.Now.Date).OrderBy(b=>b.BookingTime).Include(b=>b.Company).Include(b=>b.UserBookings).Take(4).ToListAsync();
         }
 
         public async Task<IEnumerable<Booking>> GetUsersByBookingId(int id)
@@ -45,6 +45,28 @@ namespace QioskAPI.Services
         public async Task<Booking> GetBooking(int id)
         {
             return await _context.Bookings.Include(b=>b.Company).FirstOrDefaultAsync(b=>b.BookingID == id);
+        }
+        public async Task<IEnumerable<int>> GetTimeSlots(string d)
+        {
+
+            var dX = DateTime.Parse(d);
+            var slots = new List<int>();
+            var bookings = await _context.Bookings.Where(b => b.BookingTime.Date== dX.Date).ToListAsync();
+       
+
+            switch (bookings.Count)
+            {
+                case 0:
+                    slots.Add(1);
+                    slots.Add(9);
+                    return slots;
+                case 1:
+                    if (bookings[0].BookingTime.Hour>=7 && bookings[0].BookingTime.Hour <= 10) slots.Add(1);
+                    else slots.Add(9);
+                    return slots;
+                default:
+                    return slots;
+            }
         }
 
         public async Task PostBooking(Booking booking)
