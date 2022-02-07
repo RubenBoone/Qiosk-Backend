@@ -30,7 +30,7 @@ namespace QioskAPI.Services
 
         public async Task<IEnumerable<UserTag>> GetUserTags()
         {
-            return await _context.UserTags.ToListAsync();
+            return await _context.UserTags.Include(u => u.User).Include(t => t.Tag).ToListAsync();
         }
 
         public async Task<UserTag> GetUserTag(int id)
