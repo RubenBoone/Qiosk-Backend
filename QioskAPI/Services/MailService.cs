@@ -9,8 +9,8 @@ namespace QioskAPI.Services
 {
     public class MailService : IMailService
     {
-        private readonly Mail _mail;
-        public MailService(IOptions<Mail> mail)
+        private readonly EmailSender _mail;
+        public MailService(IOptions<EmailSender> mail)
         {
             _mail = mail.Value;
         }
