@@ -19,7 +19,7 @@ namespace QioskAPI.Controllers
             _mailService = mailService;
         }
         [HttpPost, Route("SendEmail")]
-        public async void SendEmail(Mail mail, string Link)
+        public void SendEmail(Mail mail, string Link)
         {
             try
             {
