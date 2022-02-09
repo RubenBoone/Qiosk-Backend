@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using QioskAPI.Data;
 using QioskAPI.Helpers;
 using QioskAPI.Interfaces;
+using QioskAPI.Models;
 using QioskAPI.Services;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace QioskAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<MailService>(Configuration.GetSection("SmtpSettings"));
+            services.Configure<EmailSender>(Configuration.GetSection("SmtpSettings"));
             services.AddSingleton<IMailService, MailService>();
 
             services.AddCors(o => o.AddPolicy("AllowAll", builder =>
@@ -45,7 +46,7 @@ namespace QioskAPI
             services.AddDbContext<QioskContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
-          /*  services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -62,7 +63,7 @@ namespace QioskAPI
                     {new OpenApiSecurityScheme {Reference = new OpenApiReference {Type =
                     ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] {}}
                 });
-            });*/
+            });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             // configure jwt authentication

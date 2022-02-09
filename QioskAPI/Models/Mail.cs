@@ -7,11 +7,10 @@ namespace QioskAPI.Models
 {
     public class Mail
     {
-        public string Server { get; set; }
-        public int Port { get; set; }
-        public string SenderName { get; set; }
-        public string SenderEmail { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+
+        public string RecipientEmail { get; set; }
+        public string RecipientName { get; set; }
+        public string Subject { get; set; }
+        public string Message { get; set; }
     }
 }
