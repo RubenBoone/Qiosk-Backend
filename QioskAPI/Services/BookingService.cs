@@ -83,6 +83,14 @@ namespace QioskAPI.Services
                     booking.Company = company;
                 }
             }
+            if(booking.BookingTime.Hour==7|| booking.BookingTime.Hour == 8)
+            {
+                booking.BookingTime = booking.BookingTime.AddHours(booking.BookingTime.Hour == 7?2:(booking.BookingTime.Hour == 8?1:0));
+            }
+            if(booking.BookingTime.Hour==11|| booking.BookingTime.Hour == 12)
+            {
+                booking.BookingTime = booking.BookingTime.AddHours(booking.BookingTime.Hour == 11?2:(booking.BookingTime.Hour == 12?1:0));
+            }
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
         }
